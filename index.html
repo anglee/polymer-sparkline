@@ -12,6 +12,7 @@
     var getSparkline = function(numbers, container) {
       var w = 200;
       var h = 50;
+      var circleSize = 10;
       var sketch = function (s) {
         s.setup = function () {
           s.createCanvas(w, h, false, container);
@@ -42,7 +43,7 @@
           //
 
 
-          var xstep = w / (numbers.length - 1);
+          var xstep = (w - circleSize * 2) / (numbers.length - 1);
           var yScale = h / (max * 1.08);
           // draw line
 //          for (var i = 0; i < numbers.length - 1; ++i) {
@@ -53,18 +54,18 @@
             return h - yIn * yScale;
           };
           var transX = function(xIn) {
-            return xIn * xstep;
+            return circleSize + xIn * xstep;
           };
 
           // draw area
           s.noStroke();
           s.fill(0, 154, 166, 128);
           s.beginShape();
-          s.vertex(0, h);
+          s.vertex(transX(0), h);
           for (var i = 0; i < numbers.length; ++i) {
             s.vertex(transX(i), tranY(numbers[i]));
           }
-          s.vertex(w, h);
+          s.vertex(transX(numbers.length - 1), h);
           s.endShape(s.CLOSE);
 
 
@@ -76,12 +77,12 @@
           // mark max
           s.noStroke();
           s.fill(255, 0, 0, 128);
-          s.ellipse(transX(maxi), tranY(max), 10, 10);
+          s.ellipse(transX(maxi), tranY(max), circleSize, circleSize);
 
           // mark min
           s.noStroke();
           s.fill(0, 0, 255, 128);
-          s.ellipse(transX(mini), tranY(min), 10, 10);
+          s.ellipse(transX(mini), tranY(min), circleSize, circleSize);
 
 
         };
