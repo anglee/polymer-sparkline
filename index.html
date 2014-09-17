@@ -11,7 +11,7 @@
 
     var getSparkline = function(numbers, container) {
       var w = 200;
-      var h = 100;
+      var h = 50;
       var sketch = function (s) {
         s.setup = function () {
           s.createCanvas(w, h, false, container);
@@ -20,12 +20,41 @@
         };
 
         s.draw = function () {
+          // calculate min, max, sum, avg
+          var min = Number.POSITIVE_INFINITY;
+          var mini = null;
+          var max = Number.NEGATIVE_INFINITY;
+          var maxi = null;
+          var sum = 0;
+          _.each(numbers, function(num, i) {
+            if (num > max) {
+              max = num;
+              maxi = i;
+            }
+            if (num < min) {
+              min = num;
+              mini = i;
+            }
+            sum += num;
+          });
+          var avg = sum / numbers.length;
+
+          //
+
+
           var xstep = w / (numbers.length - 1);
-          var yScale = h / 8;
+          var yScale = h / (max * 1.08);
           // draw line
 //          for (var i = 0; i < numbers.length - 1; ++i) {
 //            s.line(xstep * i, h - numbers[i] * yScale, xstep * (i+1), h - numbers[i+1] * yScale);
 //          }
+
+          var tranY = function(yIn) {
+            return h - yIn * yScale;
+          };
+          var transX = function(xIn) {
+            return xIn * xstep;
+          };
 
           // draw area
           s.noStroke();
@@ -33,10 +62,27 @@
           s.beginShape();
           s.vertex(0, h);
           for (var i = 0; i < numbers.length; ++i) {
-            s.vertex(xstep * i, h - numbers[i] * yScale);
+            s.vertex(transX(i), tranY(numbers[i]));
           }
           s.vertex(w, h);
           s.endShape(s.CLOSE);
+
+
+
+          // mark avg
+          s.stroke(0);
+          s.line(0, tranY(avg), w, tranY(avg));
+
+          // mark max
+          s.noStroke();
+          s.fill(255, 0, 0, 128);
+          s.ellipse(transX(maxi), tranY(max), 10, 10);
+
+          // mark min
+          s.noStroke();
+          s.fill(0, 0, 255, 128);
+          s.ellipse(transX(mini), tranY(min), 10, 10);
+
 
         };
 
@@ -99,7 +145,11 @@
   <script>
     Polymer('init-foo', {
       ready: function() {
-        this.foo = [1,2,4,8,4,2,1];
+        this.foo = [
+          [1,2,4,8,4,2,1],
+          [1,2,1,2,1,5],
+          [7, 9, 8, 5, 4, 1]
+        ];
         console.log(this.foo);
       }
     });
@@ -122,7 +172,9 @@
 <polymer-element name="my-app">
   <template>
     <init-foo foo="{{foo}}"></init-foo>
-    <my-sparkline counter="10" elementId="canvas001" numbers="{{foo}}"></my-sparkline>
+    <my-sparkline counter="10" elementId="canvas001" numbers="{{foo[0]}}"></my-sparkline>
+    <my-sparkline counter="10" elementId="canvas001" numbers="{{foo[1]}}"></my-sparkline>
+    <my-sparkline counter="10" elementId="canvas001" numbers="{{foo[2]}}"></my-sparkline>
   </template>
   <script>
     Polymer('my-app', {
