@@ -12,24 +12,37 @@
     var getSparkline = function(numbers, container) {
       var w = 200;
       var h = 100;
-      var s = function (sketch) {
-        sketch.setup = function () {
-          sketch.createCanvas(w, h, false, container);
-          sketch.noLoop(0);
-          window.sketch = sketch;
+      var sketch = function (s) {
+        s.setup = function () {
+          s.createCanvas(w, h, false, container);
+          s.noLoop(0);
+          window.sketch = s;
         };
 
-        sketch.draw = function () {
+        s.draw = function () {
           var xstep = w / (numbers.length - 1);
           var yScale = h / 8;
-          for (var i = 0; i < numbers.length - 1; ++i) {
-            sketch.line(xstep * i, h - numbers[i] * yScale, xstep * (i+1), h - numbers[i+1] * yScale);
+          // draw line
+//          for (var i = 0; i < numbers.length - 1; ++i) {
+//            s.line(xstep * i, h - numbers[i] * yScale, xstep * (i+1), h - numbers[i+1] * yScale);
+//          }
+
+          // draw area
+          s.noStroke();
+          s.fill(0, 154, 166, 128);
+          s.beginShape();
+          s.vertex(0, h);
+          for (var i = 0; i < numbers.length; ++i) {
+            s.vertex(xstep * i, h - numbers[i] * yScale);
           }
+          s.vertex(w, h);
+          s.endShape(s.CLOSE);
+
         };
 
-        sketch.container = container;
+        s.container = container;
       };
-      var myp5 = new p5(s, container);
+      var myp5 = new p5(sketch, container);
     };
 
   </script>
