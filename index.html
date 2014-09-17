@@ -9,6 +9,8 @@
   <script src="p5-complete-0.3.6/p5.js"></script>
   <script>
 
+
+
     var getSparkline = function(numbers, container, mouse) {
       var w = 200;
       var h = 50;
@@ -45,14 +47,14 @@
 
 
           var xstep = (w - circleSize * 2) / (numbers.length - 1);
-          var yScale = (h - circleSize) / max;
+          var yScale = (h - circleSize) / (max - min);
           // draw line
 //          for (var i = 0; i < numbers.length - 1; ++i) {
 //            s.line(xstep * i, h - numbers[i] * yScale, xstep * (i+1), h - numbers[i+1] * yScale);
 //          }
 
           var tranY = function(yIn) {
-            return h - yIn * yScale;
+            return h - (yIn - min) * yScale;
           };
           var transX = function(xIn) {
             return circleSize + xIn * xstep;
