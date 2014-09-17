@@ -85,14 +85,11 @@
           s.fill(0, 0, 255, 128);
           s.ellipse(transX(mini), tranY(min), circleSize, circleSize);
 
-
-          console.log("mouseX", s.mouseX);
-          console.log("mouseY", s.mouseY);
-
           mouse.x = s.mouseX;
           mouse.y = s.mouseY;
 
-          if (s.mouseX >= transX(0) && s.mouseX <= transX(numbers.length - 1)) {
+          if (s.mouseX >= transX(0) && s.mouseX <= transX(numbers.length - 1) &&
+              s.mouseY >= 0 && s.mouseY <= h) {
             s.stroke(255, 0, 0);
             s.line(s.mouseX, 0, s.mouseX, h);
           }
@@ -126,6 +123,10 @@
         //console.log(this);
         //console.log(this.$);
         console.log(this.$["p5-spark"]);
+
+        if (!this.mouse) {
+          this.mouse = {};
+        }
 
         //var c = document.createElement('div');
         var newDiv = document.createElement("div");
@@ -187,11 +188,13 @@
 
 <polymer-element name="my-app">
   <template>
-    <init-foo foo="{{foo}}" mouse="{{mouse}}"></init-foo>
-    <my-sparkline counter="10" elementId="canvas001" numbers="{{foo[0]}}" mouse="{{mouse}}"></my-sparkline>
-    <!--<my-sparkline counter="10" elementId="canvas001" numbers="{{foo[1]}}" mouse="{{mouse}}"></my-sparkline>-->
-    <!--<my-sparkline counter="10" elementId="canvas001" numbers="{{foo[2]}}" mouse="{{mouse}}"></my-sparkline>-->
-    <div><b>{{mouse.x}}, {{mouse.y}}</b></div>
+    <init-foo foo="{{foo}}"></init-foo>
+    <my-sparkline counter="10" elementId="canvas001" numbers="{{foo[0]}}" mouse="{{mouse1}}"></my-sparkline>
+    <div><b>{{mouse1.x}}, {{mouse1.y}}</b></div>
+    <my-sparkline counter="10" elementId="canvas001" numbers="{{foo[1]}}" mouse="{{mouse2}}"></my-sparkline>
+    <div><b>{{mouse2.x}}, {{mouse2.y}}</b></div>
+    <my-sparkline counter="10" elementId="canvas001" numbers="{{foo[2]}}" mouse="{{mouse3}}"></my-sparkline>
+    <div><b>{{mouse3.x}}, {{mouse3.y}}</b></div>
   </template>
   <script>
     Polymer('my-app', {
