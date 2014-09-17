@@ -45,7 +45,7 @@
 
 
           var xstep = (w - circleSize * 2) / (numbers.length - 1);
-          var yScale = h / (max * 1.08);
+          var yScale = (h - circleSize) / max;
           // draw line
 //          for (var i = 0; i < numbers.length - 1; ++i) {
 //            s.line(xstep * i, h - numbers[i] * yScale, xstep * (i+1), h - numbers[i+1] * yScale);
@@ -73,7 +73,7 @@
 
           // mark avg
           s.stroke(0);
-          s.line(0, tranY(avg), w, tranY(avg));
+          s.line(transX(0), tranY(avg), transX(numbers.length - 1), tranY(avg));
 
           // mark max
           s.noStroke();
@@ -91,6 +91,11 @@
 
           mouse.x = s.mouseX;
           mouse.y = s.mouseY;
+
+          if (s.mouseX >= transX(0) && s.mouseX <= transX(numbers.length - 1)) {
+            s.stroke(255, 0, 0);
+            s.line(s.mouseX, 0, s.mouseX, h);
+          }
         };
 
         s.container = container;
