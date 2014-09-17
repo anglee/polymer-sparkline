@@ -36,7 +36,7 @@
 </head>
 <body>
 
-<polymer-element name="my-counter" attributes="counter elementId">
+<polymer-element name="my-counter" attributes="counter elementId numbers">
   <template>
     <style> /*...*/ </style>
     <div id="label">
@@ -63,7 +63,8 @@
 
         this.$["text-container"].appendChild(newDiv);
         //this.$["p5-spark"].appendChild(document.createElement('canvas'));
-        getSparkline([1,2,4,8,4,2,1], this.$["p5-spark"]);
+        console.log("numbers = ", typeof this.numbers);
+        getSparkline(JSON.parse(this.numbers), this.$["p5-spark"]);
         console.log("after getSparkline");
 
       },
@@ -78,7 +79,7 @@
   </script>
 </polymer-element>
 
-  <my-counter counter="10" elementId="canvas001">Points</my-counter>
+  <my-counter counter="10" elementId="canvas001" numbers="[1,2,4,8,4,2,1]">Points</my-counter>
 
 
 </body>
