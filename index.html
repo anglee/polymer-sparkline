@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+  <meta charset="UTF-8">
+  <title>Sparkline</title>
+  <script src="bower_components/platform/platform.js"></script>
+  <script src="bower_components/polymer/polymer.js"></script>
+  <script src="p5-complete-0.3.6/p5.js"></script>
+  <script>
+
+    var getSparkline = function(numbers, container) {
+      var w = 200;
+      var h = 100;
+      var s = function (sketch) {
+        sketch.setup = function () {
+          sketch.createCanvas(w, h, false, container);
+          sketch.noLoop(0);
+          window.sketch = sketch;
+        };
+
+        sketch.draw = function () {
+          var xstep = w / (numbers.length - 1);
+          var yScale = h / 8;
+          for (var i = 0; i < numbers.length - 1; ++i) {
+            sketch.line(xstep * i, h - numbers[i] * yScale, xstep * (i+1), h - numbers[i+1] * yScale);
+          }
+
+        };
+
+        sketch.container = container;
+      };
+      var myp5 = new p5(s, container);
+    };
+
+  </script>
+</head>
+<body>
+
+<polymer-element name="my-counter" attributes="counter elementId">
+  <template>
+    <style> /*...*/ </style>
+    <div id="label">
+      <content></content>
+    </div>
+    Value: <span id="counterVal">{{counter}}</span><br>
+    <button on-tap="{{increment}}">Increment</button>
+    <div id="text-container"></div>
+    <div id="p5-spark"></div>
+    <p></p>
+  </template>
+  <script>
+    Polymer({
+      ready: function() {
+        //console.log("ready", this.elementId);
+        //console.log(this);
+        //console.log(this.$);
+        console.log(this.$["p5-spark"]);
+
+        //var c = document.createElement('div');
+        var newDiv = document.createElement("div");
+        var newContent = document.createTextNode("Hi there and greetings! " + this.elementId);
+        newDiv.appendChild(newContent); //add the text node to the newly created div.
+
+        this.$["text-container"].appendChild(newDiv);
+        //this.$["p5-spark"].appendChild(document.createElement('canvas'));
+        getSparkline([1,2,4,8,4,2,1], this.$["p5-spark"]);
+        console.log("after getSparkline");
+
+      },
+      counter: 0, // Default value
+      counterChanged: function () {
+        this.$.counterVal.classList.add('highlight');
+      },
+      increment: function () {
+        this.counter++;
+      }
+    });
+  </script>
+</polymer-element>
+
+  <my-counter counter="10" elementId="canvas001">Points</my-counter>
+
+
+</body>
+</html>

@@ -121,8 +121,10 @@ var core = function (require, shim, constants) {
       };
       this._start = function () {
         if (this._userNode) {
+          console.log(this._userNode);
           if (typeof this._userNode === 'string') {
             this._userNode = document.getElementById(this._userNode);
+            console.log(this._userNode);
           }
         }
         this.createCanvas(this._defaultCanvasSize.width, this._defaultCanvasSize.height, true);
@@ -159,6 +161,7 @@ var core = function (require, shim, constants) {
         });
       }.bind(this);
       this._setup = function () {
+        console.log("_setup");
         var context = this._isGlobal ? window : this;
         if (typeof context.preload === 'function') {
           this._preloadMethods.forEach(function (f) {
@@ -169,7 +172,14 @@ var core = function (require, shim, constants) {
           context.setup();
         }
         var reg = new RegExp(/(^|\s)p5_hidden(?!\S)/g);
-        var canvases = document.getElementsByClassName('p5_hidden');
+
+        var canvases;
+        if (context.container) {
+          canvases = context.container.getElementsByClassName('p5_hidden');
+        } else {
+          canvases = document.getElementsByClassName('p5_hidden');
+        }
+
         for (var i = 0; i < canvases.length; i++) {
           var k = canvases[i];
           k.style.visibility = '';
@@ -3901,13 +3911,21 @@ var outputtext_area = function (require, core) {
 var renderingrendering = function (require, core, constants) {
     var p5 = core;
     var constants = constants;
-    p5.prototype.createCanvas = function (w, h, isDefault) {
+    p5.prototype.createCanvas = function (w, h, isDefault, container) {
+      console.log(container);
       var c;
       if (isDefault) {
+        console.log("isDefault");
         c = document.createElement('canvas');
         c.id = 'defaultCanvas';
       } else {
-        c = document.getElementById('defaultCanvas');
+        console.log("is NOT Default");
+        if (!container) {
+          c = document.getElementById('defaultCanvas');
+        } else {
+          c = container.getElementsByTagName("canvas")[0];
+        }
+
         if (c) {
           c.id = '';
         } else {
@@ -3924,8 +3942,10 @@ var renderingrendering = function (require, core, constants) {
         c.style.visibility = 'hidden';
       }
       if (this._userNode) {
+        console.log("Append 1");
         this._userNode.appendChild(c);
       } else {
+        console.log("Append Body");
         document.body.appendChild(c);
       }
       var pg = this._defaultGraphics;
