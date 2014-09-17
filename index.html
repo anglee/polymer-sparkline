@@ -104,51 +104,23 @@
 </head>
 <body>
 
-<polymer-element name="my-sparkline" attributes="counter elementId numbers mouse">
+<polymer-element name="my-sparkline" attributes="numbers mouse">
   <template>
-    <style> /*...*/ </style>
-    <div id="label">
-      <content></content>
-    </div>
-    Value: <span id="counterVal">{{counter}}</span><br>
-    <button on-tap="{{increment}}">Increment</button>
-    <div id="text-container"></div>
     <div id="p5-spark"></div>
-    <p></p>
   </template>
   <script>
     Polymer({
       ready: function() {
-        //console.log("ready", this.elementId);
-        //console.log(this);
-        //console.log(this.$);
-        console.log(this.$["p5-spark"]);
 
         if (!this.mouse) {
           this.mouse = {};
         }
 
-        //var c = document.createElement('div');
-        var newDiv = document.createElement("div");
-        var newContent = document.createTextNode("Hi there and greetings! " + this.elementId);
-        newDiv.appendChild(newContent); //add the text node to the newly created div.
-
-        this.$["text-container"].appendChild(newDiv);
-        //this.$["p5-spark"].appendChild(document.createElement('canvas'));
-        console.log("numbers = ", this.numbers);
         if (typeof this.numbers === 'string') {
-          console.log("parsing numbers from string");
+          console.warn("parsing numbers from string");
           this.numbers = JSON.parse(this.numbers);
         }
         getSparkline(this.numbers, this.$["p5-spark"], this.mouse);
-        console.log("after getSparkline");
-      },
-      counter: 0, // Default value
-      counterChanged: function () {
-        this.$.counterVal.classList.add('highlight');
-      },
-      increment: function () {
-        this.counter++;
       }
     });
   </script>
@@ -163,37 +135,19 @@
           [1,2,1,2,1,5],
           [7, 9, 8, 5, 4, 1]
         ];
-        console.log(this.foo);
-        this.mouse = {
-          x: 100,
-          y: 200
-        };
       }
     });
   </script>
 </polymer-element>
 
-
-<!--<polymer-element name="add-point" attributes="foo">-->
-  <!--<script>-->
-    <!--Polymer('init-foo', {-->
-      <!--ready: function() {-->
-        <!--this.foo = [1,2,4,8,4,2,1];-->
-        <!--console.log(this.foo);-->
-      <!--}-->
-    <!--});-->
-  <!--</script>-->
-<!--</polymer-element>-->
-
-
 <polymer-element name="my-app">
   <template>
     <init-foo foo="{{foo}}"></init-foo>
-    <my-sparkline counter="10" elementId="canvas001" numbers="{{foo[0]}}" mouse="{{mouse1}}"></my-sparkline>
+    <my-sparkline counter="10" numbers="{{foo[0]}}" mouse="{{mouse1}}"></my-sparkline>
     <div><b>{{mouse1.x}}, {{mouse1.y}}</b></div>
-    <my-sparkline counter="10" elementId="canvas001" numbers="{{foo[1]}}" mouse="{{mouse2}}"></my-sparkline>
+    <my-sparkline counter="10" numbers="{{foo[1]}}" mouse="{{mouse2}}"></my-sparkline>
     <div><b>{{mouse2.x}}, {{mouse2.y}}</b></div>
-    <my-sparkline counter="10" elementId="canvas001" numbers="{{foo[2]}}" mouse="{{mouse3}}"></my-sparkline>
+    <my-sparkline counter="10" numbers="{{foo[2]}}" mouse="{{mouse3}}"></my-sparkline>
     <div><b>{{mouse3.x}}, {{mouse3.y}}</b></div>
   </template>
   <script>
