@@ -9,18 +9,19 @@
   <script src="p5-complete-0.3.6/p5.js"></script>
   <script>
 
-    var getSparkline = function(numbers, container) {
+    var getSparkline = function(numbers, container, mouse) {
       var w = 200;
       var h = 50;
       var circleSize = 10;
       var sketch = function (s) {
         s.setup = function () {
           s.createCanvas(w, h, false, container);
-          s.noLoop(0);
+          //s.noLoop(0);
           window.sketch = s;
         };
 
         s.draw = function () {
+          s.clear();
           // calculate min, max, sum, avg
           var min = Number.POSITIVE_INFINITY;
           var mini = null;
@@ -85,6 +86,11 @@
           s.ellipse(transX(mini), tranY(min), circleSize, circleSize);
 
 
+          console.log("mouseX", s.mouseX);
+          console.log("mouseY", s.mouseY);
+
+          mouse.x = s.mouseX;
+          mouse.y = s.mouseY;
         };
 
         s.container = container;
@@ -96,7 +102,7 @@
 </head>
 <body>
 
-<polymer-element name="my-sparkline" attributes="counter elementId numbers">
+<polymer-element name="my-sparkline" attributes="counter elementId numbers mouse">
   <template>
     <style> /*...*/ </style>
     <div id="label">
@@ -128,7 +134,7 @@
           console.log("parsing numbers from string");
           this.numbers = JSON.parse(this.numbers);
         }
-        getSparkline(this.numbers, this.$["p5-spark"]);
+        getSparkline(this.numbers, this.$["p5-spark"], this.mouse);
         console.log("after getSparkline");
       },
       counter: 0, // Default value
@@ -142,7 +148,7 @@
   </script>
 </polymer-element>
 
-<polymer-element name="init-foo" attributes="foo">
+<polymer-element name="init-foo" attributes="foo mouse">
   <script>
     Polymer('init-foo', {
       ready: function() {
@@ -152,6 +158,10 @@
           [7, 9, 8, 5, 4, 1]
         ];
         console.log(this.foo);
+        this.mouse = {
+          x: 100,
+          y: 200
+        };
       }
     });
   </script>
@@ -172,16 +182,18 @@
 
 <polymer-element name="my-app">
   <template>
-    <init-foo foo="{{foo}}"></init-foo>
-    <my-sparkline counter="10" elementId="canvas001" numbers="{{foo[0]}}"></my-sparkline>
-    <my-sparkline counter="10" elementId="canvas001" numbers="{{foo[1]}}"></my-sparkline>
-    <my-sparkline counter="10" elementId="canvas001" numbers="{{foo[2]}}"></my-sparkline>
+    <init-foo foo="{{foo}}" mouse="{{mouse}}"></init-foo>
+    <my-sparkline counter="10" elementId="canvas001" numbers="{{foo[0]}}" mouse="{{mouse}}"></my-sparkline>
+    <!--<my-sparkline counter="10" elementId="canvas001" numbers="{{foo[1]}}" mouse="{{mouse}}"></my-sparkline>-->
+    <!--<my-sparkline counter="10" elementId="canvas001" numbers="{{foo[2]}}" mouse="{{mouse}}"></my-sparkline>-->
+    <div><b>{{mouse.x}}, {{mouse.y}}</b></div>
   </template>
   <script>
     Polymer('my-app', {
       ready: function() {
         console.log("my-app ready");
         console.log("foo = ", this.foo);
+        console.log("mouse", this.mouse);
       }
     });
   </script>
