@@ -1,0 +1,214 @@
+<polymer-element name="pp-sparkline" attributes="numbers info area line show-avg line-width line-color area-color">
+  <template>
+    <div id="p5-spark"></div>
+  </template>
+  <script src="../p5-complete-0.3.6/p5.js"></script>
+  <script>
+    var cr = function(hex) {
+      return parseInt(hex.substr(1,2), 16);
+    };
+    var cg = function(hex) {
+      return parseInt(hex.substr(3,2), 16);
+    };
+    var cb = function(hex) {
+      return parseInt(hex.substr(5,2), 16);
+    };
+    var ca = function(hex) {
+      if (hex.length === 9) {
+        return parseInt(hex.substr(7,2), 16);
+      } else {
+        return 255;
+      }
+    };
+    var getSparkline = function(numbers, container, info, prop) {
+      var w = 200;
+      var h = 50;
+      var circleSize = 6;
+      var sketch = function (s) {
+        s.setup = function () {
+          s.createCanvas(w, h, false, container);
+          if (prop.followCursor) {
+
+          } else {
+            s.noLoop(0);
+          }
+          window.sketch = s;
+        };
+
+        s.draw = function () {
+          s.clear();
+          // calculate min, max, sum, avg
+          var min = Number.POSITIVE_INFINITY;
+          var mini = null;
+          var max = Number.NEGATIVE_INFINITY;
+          var maxi = null;
+          var sum = 0;
+          _.each(numbers, function(num, i) {
+            if (num == null) { return; }
+            if (num > max) {
+              max = num;
+              maxi = i;
+            }
+            if (num < min) {
+              min = num;
+              mini = i;
+            }
+            sum += num;
+          });
+          var avg = sum / numbers.length;
+
+          info.min = min;
+          info.max = max;
+          info.avg = avg;
+          info.sum = sum;
+          info.first = numbers[0];
+          info.last = numbers[numbers.length - 1];
+
+          var xstep = (w - circleSize * 2) / (numbers.length - 1);
+          var yScale = (h - circleSize * 2) / (max - min);
+
+          var tranY = function(yIn) {
+            return h - circleSize - (yIn - min) * yScale;
+          };
+          var transX = function(xIn) {
+            return circleSize + xIn * xstep;
+          };
+
+
+//          // draw area
+          if (prop.area) {
+            s.noStroke();
+            s.fill(prop.acr, prop.acg, prop.acb, prop.aca);
+            s.beginShape();
+            s.vertex(transX(0), h);
+            for (var i = 0; i < numbers.length; ++i) {
+              if (numbers[i]) { // skip null
+                s.vertex(transX(i), tranY(numbers[i]));
+              }
+            }
+            s.vertex(transX(numbers.length - 1), h);
+            s.endShape(s.CLOSE);
+          }
+
+          // draw line
+          if (prop.line !== "false") {
+
+            s.stroke(prop.lcr, prop.lcg, prop.lcb, prop.lca);
+            s.strokeWeight(prop.lw);
+            s.beginShape(s.LINES);
+            for (var i = 0; i < numbers.length; ++i) {
+              if (numbers[i]) { // skip null
+                s.vertex(transX(i), tranY(numbers[i]));
+              }
+            }
+            s.endShape();
+            s.strokeWeight(1);
+          }
+
+          // mark avg
+          if (prop.showAvg) {
+            s.stroke(0, 90);
+            s.strokeWeight(0.5);
+            s.line(transX(0), tranY(avg), transX(numbers.length - 1), tranY(avg));
+          }
+
+          // mark max
+          s.noStroke();
+          s.fill(102, 182, 232, 180);
+          //s.fill("#FF0000");
+          s.ellipse(transX(maxi), tranY(max), circleSize, circleSize);
+
+          // mark min
+          s.noStroke();
+          s.fill(102, 182, 232, 180);
+          s.ellipse(transX(mini), tranY(min), circleSize, circleSize);
+
+          // mark first
+          s.noStroke();
+          s.fill(255, 0, 0, 128);
+          s.ellipse(transX(0), tranY(info.first), circleSize, circleSize);
+
+          // mark last
+          s.noStroke();
+          s.fill(255, 0, 0, 128);
+          s.ellipse(transX(numbers.length - 1), tranY(info.last), circleSize, circleSize);
+
+          info.mouse.x = s.mouseX;
+          info.mouse.y = s.mouseY;
+
+          if (prop.followCursor) {
+            if (s.mouseX >= transX(0) && s.mouseX <= transX(numbers.length - 1) &&
+                s.mouseY >= 0 && s.mouseY <= h) {
+              s.stroke(255, 200, 0);
+              s.line(s.mouseX, 0, s.mouseX, h);
+              var closestX = Math.round((s.mouseX-circleSize) / xstep);
+              //console.log("mouseX = ", s.mouseX, "xstep = ", xstep, "closestX = ", closestX);
+              info.cursor = numbers[closestX];
+              s.noStroke();
+              s.fill(178, 140, 0, 128);
+              s.ellipse(transX(closestX), tranY(info.cursor), circleSize, circleSize);
+            } else {
+              info.cursor = null;
+            }
+          }
+        };
+
+        s.container = container;
+      };
+      var myp5 = new p5(sketch, container);
+    };
+
+    Polymer({
+      ready: function() {
+        if (!this.info) {
+          this.info = {
+            mouse: {}
+          };
+        }
+        console.log("show avg", this["show-avg"] === "false");
+
+        if (typeof this.numbers === 'string') {
+          console.warn("parsing numbers from string");
+          this.numbers = JSON.parse(this.numbers);
+        }
+        if (this.area != undefined && this.area != "false") {
+          this.area = true;
+        }
+        if (this["show-avg"] != undefined && this["show-avg"] != "false") {
+          this.showAvg = true;
+        }
+
+        if (!this["line-color"]) {
+          this.lineColor = "#000000";
+        } else {
+          this.lineColor = this["line-color"];
+        }
+        if (!this["line-width"]) {
+          this.lineWidth = 1;
+        } else {
+          this.lineWidth = this["line-width"];
+        }
+        if (!this["area-color"]) {
+          this.areaColor = "#009AA680"; // (0, 154, 166, 128)
+        } else {
+          this.areaColor = this["area-color"];
+        }
+        getSparkline(this.numbers, this.$["p5-spark"], this.info, {
+          area: this.area,
+          line: this.line,
+          followCursor: true,
+          showAvg: this.showAvg,
+          lcr: cr(this.lineColor),
+          lcg: cg(this.lineColor),
+          lcb: cb(this.lineColor),
+          lca: ca(this.lineColor),
+          lw: this.lineWidth,
+          acr: cr(this.areaColor),
+          acg: cg(this.areaColor),
+          acb: cb(this.areaColor),
+          aca: ca(this.areaColor)
+        });
+      }
+    });
+  </script>
+</polymer-element>

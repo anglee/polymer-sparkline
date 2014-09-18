@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+  <meta charset="UTF-8">
+  <title>Sparkline</title>
+
+  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
+  <script src="bower_components/platform/platform.js"></script>
+  <script src="bower_components/polymer/polymer.js"></script>
+  <script src="bower_components/jquery/dist/jquery.js"></script>
+  <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+  <script src="bower_components/lodash/dist/lodash.js"></script>
+
+  <link rel="import" href="elements/pp-sparkline.html">
+
+</head>
+<body>
+<polymer-element name="sparkline-label">
+  <template>
+    <pp-sparkline numbers="{{numbers}}" info="{{info}}" show-avg></pp-sparkline>
+    <div>min = {{info.min}}</div>
+    <div>max = {{info.max}}</div>
+    <div>avg = {{info.avg}}</div>
+    <div>cursor = {{info.cursor}}</div>
+  </template>
+  <script>
+    Polymer('sparkline-label', {
+      numbers: [3,1,2,4,8,5,3,7],
+      ready: function() {
+//        var self = this;
+//        setTimeout(function() {
+//          self.numbers.push(2);
+//          self.numbers.push(3);
+//          self.numbers.push(7);
+//        }, 3000)
+      }
+    });
+  </script>
+</polymer-element>
+
+<sparkline-label></sparkline-label>
+
+</body>
+</html>

@@ -1,0 +1,27 @@
+table {
+    text-align: center;
+    border: none;
+    border-collapse:collapse;
+}
+.right {
+    text-align: right;
+    padding-right: 10px;
+    min-width: 100px;
+}
+th.underline {
+    border-bottom: solid;
+    border-bottom-color: #bbbbbb;
+    border-bottom-width: 1px;
+}
+td {
+    min-width: 80px;
+}
+.red {
+    color: #FF0000;
+}
+.blue {
+    color: #66B6E8;
+}
+.orange {
+    color: #FFC800;
+}

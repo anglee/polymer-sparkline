@@ -11,15 +11,24 @@
   <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
   <script src="bower_components/lodash/dist/lodash.js"></script>
 
-
-
-  <link rel="import" href="elements/tufte-table.html">
-
+  <link rel="import" href="elements/pp-sparkline.html">
 
 </head>
 <body>
+<polymer-element name="sparkline-label">
+  <template>
+    <pp-sparkline numbers="[3,1,2,4,8,5,3,7]" info="{{info}}" show-avg></pp-sparkline>
+    <div>min = {{info.min}}</div>
+    <div>max = {{info.max}}</div>
+    <div>avg = {{info.avg}}</div>
+    <div>cursor = {{info.cursor}}</div>
+  </template>
+  <script>
+    Polymer('sparkline-label', {});
+  </script>
+</polymer-element>
 
-  <tufte-table ></tufte-table>
+<sparkline-label></sparkline-label>
 
 </body>
 </html>

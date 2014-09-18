@@ -3911,6 +3911,7 @@ var outputtext_area = function (require, core) {
 var renderingrendering = function (require, core, constants) {
     var p5 = core;
     var constants = constants;
+
     p5.prototype.createCanvas = function (w, h, isDefault, container) {
       //console.log(container);
       var c;

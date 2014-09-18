@@ -1,0 +1,42 @@
+<link rel="import" href="pp-sparkline.html">
+<link rel="import" href="data-factory.html">
+<polymer-element name="tufte-table">
+  <template>
+    <link rel="stylesheet" href="tufte-table.css">
+    <data-factory data="{{data}}"></data-factory>
+    <table>
+      <tr>
+        <th></th>
+        <th class="underline">2014.01.01</th>
+        <th class="underline">YTD</th>
+        <th class="underline">2014.09.17</th>
+        <th class="underline">low</th>
+        <th class="underline">high</th>
+        <th class="underline"></th>
+
+      </tr>
+      <template repeat="{{d in data}}">
+        <tr>
+          <td class="right">{{d.name}}</td>
+          <td class="red">{{f(d.info.first)}}</td>
+          <td><pp-sparkline numbers="{{d.numbers}}" info="{{d.info}}"></pp-sparkline></td>
+          <td class="red">{{f(d.info.last)}}</td>
+          <td class="blue">{{f(d.info.min)}}</td>
+          <td class="blue">{{f(d.info.max)}}</td>
+          <td class="orange">{{f(d.info.cursor)}}</td>
+        </tr>
+      </template>
+    </table>
+  </template>
+  <script>
+    Polymer('tufte-table', {
+      ready: function() {
+      },
+      f: function(num) {
+        if (num) {
+          return num.toPrecision(6);
+        }
+      }
+    });
+  </script>
+</polymer-element>
