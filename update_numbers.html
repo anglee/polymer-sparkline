@@ -15,24 +15,72 @@
 
 </head>
 <body>
+
+<polymer-element name="update-from-mouse" attributes="numbers">
+  <script>
+    var lastmousex=-1;
+    var lastmousey=-1;
+    var lastmousetime;
+    var mousetravel = 0;
+    var mpoints_max = 50;
+    Polymer('update-from-mouse', {
+      ready: function() {
+        $('html').mousemove(function(e) {
+          console.log("mousemove");
+          var mousex = e.pageX;
+          var mousey = e.pageY;
+          if (lastmousex > -1) {
+            mousetravel += Math.max( Math.abs(mousex-lastmousex), Math.abs(mousey-lastmousey) );
+          }
+          lastmousex = mousex;
+          lastmousey = mousey;
+        });
+
+        var self = this;
+        var update = function() {
+          var md = new Date();
+          var timenow = md.getTime();
+          if (lastmousetime && lastmousetime!=timenow) {
+
+            var pps = Math.round(mousetravel / (timenow - lastmousetime) * 1000);
+            self.numbers.push(pps);
+            if (self.numbers.length > mpoints_max) {
+              self.numbers.splice(0,1);
+            }
+            mousetravel = 0;
+          } else {
+            console.log("update 3");
+            self.numbers.push(0);
+            if (self.numbers.length > mpoints_max) {
+              self.numbers.splice(0,1);
+            }
+          }
+          lastmousetime = timenow;
+          setTimeout(update, 500);
+        };
+        setTimeout(update, 500);
+      }
+    });
+  </script>
+</polymer-element>
+
 <polymer-element name="sparkline-label">
   <template>
+    <update-from-mouse numbers="{{numbers}}"></update-from-mouse>
     <pp-sparkline numbers="{{numbers}}" info="{{info}}" show-avg></pp-sparkline>
     <div>min = {{info.min}}</div>
     <div>max = {{info.max}}</div>
-    <div>avg = {{info.avg}}</div>
+    <div>avg = {{f(info.avg)}}</div>
     <div>cursor = {{info.cursor}}</div>
   </template>
   <script>
     Polymer('sparkline-label', {
-      numbers: [3,1,2,4,8,5,3,7],
-      ready: function() {
-//        var self = this;
-//        setTimeout(function() {
-//          self.numbers.push(2);
-//          self.numbers.push(3);
-//          self.numbers.push(7);
-//        }, 3000)
+      numbers: [10, 10, 10, 10, 10],
+      ready: function() {},
+      f: function(num) {
+        if (num) {
+          return num.toPrecision(6);
+        }
       }
     });
   </script>
