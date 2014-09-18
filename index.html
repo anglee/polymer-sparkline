@@ -19,7 +19,7 @@
       var sketch = function (s) {
         s.setup = function () {
           s.createCanvas(w, h, false, container);
-          s.noLoop(0);
+          //s.noLoop(0);
           window.sketch = s;
         };
 
@@ -117,8 +117,15 @@
 
           if (s.mouseX >= transX(0) && s.mouseX <= transX(numbers.length - 1) &&
               s.mouseY >= 0 && s.mouseY <= h) {
-            s.stroke(255, 0, 0);
+            s.stroke(255, 200, 0);
             s.line(s.mouseX, 0, s.mouseX, h);
+            var closestX = Math.round(s.mouseX / xstep) - 1;
+            info.cursor = numbers[closestX];
+            s.noStroke();
+            s.fill(178, 140, 0, 128);
+            s.ellipse(transX(closestX), tranY(info.cursor), circleSize, circleSize);
+          } else {
+            info.cursor = null;
           }
         };
 
@@ -226,6 +233,9 @@
       .blue {
         color: #66B6E8;
       }
+      .orange {
+        color: #FFC800;
+      }
     </style>
     <init-data data="{{data}}"></init-data>
     <table class="aaa">
@@ -236,6 +246,8 @@
         <th class="underline">2014.09.17</th>
         <th class="underline">low</th>
         <th class="underline">high</th>
+        <th class="underline"></th>
+
       </tr>
       <template repeat="{{d in data}}">
       <tr>
@@ -245,6 +257,7 @@
         <td class="red">{{f(d.info.last)}}</td>
         <td class="blue">{{f(d.info.min)}}</td>
         <td class="blue">{{f(d.info.max)}}</td>
+        <td class="orange">{{f(d.info.cursor)}}</td>
       </tr>
       </template>
     </table>
