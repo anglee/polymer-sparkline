@@ -1,0 +1,170 @@
+{
+    "beaker": "2",
+    "evaluators": [
+        {
+            "name": "Html",
+            "plugin": "Html",
+            "view": {
+                "cm": {
+                    "mode": "htmlmixed"
+                }
+            }
+        },
+        {
+            "name": "Latex",
+            "plugin": "Latex",
+            "view": {
+                "cm": {
+                    "mode": "stex"
+                }
+            }
+        },
+        {
+            "name": "IPython",
+            "plugin": "IPython",
+            "imports": "",
+            "supplementalClassPath": "",
+            "view": {
+                "cm": {
+                    "mode": "python"
+                }
+            }
+        },
+        {
+            "name": "JavaScript",
+            "plugin": "JavaScript",
+            "jsSetting2": "",
+            "jsSetting1": "",
+            "view": {
+                "cm": {
+                    "mode": "javascript",
+                    "background": "#FFE0F0"
+                }
+            }
+        },
+        {
+            "name": "R",
+            "plugin": "R",
+            "view": {
+                "cm": {
+                    "mode": "r"
+                }
+            }
+        }
+    ],
+    "cells": [
+        {
+            "id": "section001",
+            "type": "section",
+            "level": 1,
+            "title": "Hello Beaker",
+            "collapsed": false,
+            "evaluatorReader": false
+        },
+        {
+            "id": "code94vQnP",
+            "type": "code",
+            "evaluator": "Html",
+            "input": {
+                "body": "<link rel=\"import\" href=\"elements/pp-sparkline.html\">\n\n<pp-sparkline numbers=\"[4,1,2,5,8,3]\"></pp-sparkline>"
+            },
+            "output": {
+                "state": {},
+                "selectedType": "BeakerDisplay",
+                "elapsedTime": 14
+            },
+            "evaluatorReader": true,
+            "lineCount": 3
+        },
+        {
+            "id": "code32V21g",
+            "type": "code",
+            "evaluator": "Html",
+            "input": {
+                "body": "<pp-sparkline numbers=\"[3,1,2,4,8,5,3,7]\" show-avg=\"true\"></pp-sparkline>"
+            },
+            "output": {
+                "state": {},
+                "selectedType": "BeakerDisplay",
+                "elapsedTime": 47
+            },
+            "evaluatorReader": true,
+            "lineCount": 1
+        },
+        {
+            "id": "codeCgEGm1",
+            "type": "code",
+            "evaluator": "Html",
+            "input": {
+                "body": "<pp-sparkline numbers=\"[3,1,2,4,8,5,3,7]\" area=\"true\"></pp-sparkline>"
+            },
+            "output": {
+                "state": {},
+                "selectedType": "BeakerDisplay",
+                "elapsedTime": 61
+            },
+            "evaluatorReader": true,
+            "lineCount": 1
+        },
+        {
+            "id": "codenQISwx",
+            "type": "code",
+            "evaluator": "Html",
+            "input": {
+                "body": "<pp-sparkline numbers=\"[3,1,2,4,8,5,3,7]\"\n              line-color=\"#FFBB00\"\n              line-width=\"5\"\n              area\n              area-color=\"#7F00FFAA\"></pp-sparkline>"
+            },
+            "output": {
+                "state": {},
+                "selectedType": "BeakerDisplay",
+                "elapsedTime": 37
+            },
+            "evaluatorReader": true,
+            "lineCount": 5
+        },
+        {
+            "id": "codes2TQnB",
+            "type": "code",
+            "evaluator": "Html",
+            "input": {
+                "body": "<polymer-element name=\"sparkline-label\">\n  <template>\n    <pp-sparkline numbers=\"[3,1,2,4,8,5,3,7]\" info=\"{{info}}\" show-avg></pp-sparkline>\n    <div>min = {{info.min}}</div>\n    <div>max = {{info.max}}</div>\n    <div>avg = {{info.avg}}</div>\n    <div>cursor = {{info.cursor}}</div>\n  </template>\n  <script>\n    Polymer('sparkline-label', {});\n  </script>\n</polymer-element>\n\n<sparkline-label></sparkline-label>"
+            },
+            "output": {
+                "state": {},
+                "selectedType": "BeakerDisplay",
+                "elapsedTime": 12
+            },
+            "evaluatorReader": true,
+            "lineCount": 14
+        },
+        {
+            "id": "codeX6Eqfw",
+            "type": "code",
+            "evaluator": "Html",
+            "input": {
+                "body": "<link rel=\"import\" href=\"elements/update-from-mouse.html\">\n\n<polymer-element name=\"sparkline-update\">\n  <template>\n    <update-from-mouse numbers=\"{{numbers}}\"></update-from-mouse>\n    <pp-sparkline numbers=\"{{numbers}}\" info=\"{{info}}\" show-avg></pp-sparkline>\n    <div>min = {{info.min}}</div>\n    <div>max = {{info.max}}</div>\n    <div>avg = {{f(info.avg)}}</div>\n    <div>cursor = {{info.cursor}}</div>\n  </template>\n  <script>\n    Polymer('sparkline-update', {\n      numbers: [10, 10, 10, 10, 10],\n      ready: function() {},\n      f: function(num) {\n        if (num) {\n          return num.toPrecision(6);\n        }\n      }\n    });\n  </script>\n</polymer-element>\n\n<sparkline-update></sparkline-update>"
+            },
+            "output": {
+                "state": {},
+                "selectedType": "BeakerDisplay",
+                "elapsedTime": 12
+            },
+            "evaluatorReader": true,
+            "lineCount": 25
+        },
+        {
+            "id": "code001",
+            "type": "code",
+            "evaluator": "Html",
+            "input": {
+                "body": "<link rel=\"import\" href=\"elements/tufte-table.html\">\n\n<tufte-table ></tufte-table>"
+            },
+            "output": {
+                "selectedType": "BeakerDisplay",
+                "state": {},
+                "elapsedTime": 25
+            },
+            "evaluatorReader": true,
+            "lineCount": 3
+        }
+    ]
+}
